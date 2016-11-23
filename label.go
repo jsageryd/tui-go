@@ -9,7 +9,7 @@ import (
 
 // Label is a widget to display read-only text.
 type Label struct {
-	text string
+	text Text
 
 	size image.Point
 }
@@ -17,15 +17,15 @@ type Label struct {
 // NewLabel returns a new Label.
 func NewLabel(text string) *Label {
 	return &Label{
-		text: text,
+		text: Text(text),
 	}
 }
 
 // Draw draws the label.
 func (l *Label) Draw(p *Painter) {
-	lines := strings.Split(l.text, "\n")
+	lines := strings.Split(string(l.text), "\n")
 	for i, line := range lines {
-		p.DrawText(0, i, line)
+		p.DrawText(0, i, Text(line))
 	}
 }
 
@@ -36,18 +36,10 @@ func (l *Label) Size() image.Point {
 
 // SizeHint returns the recommended size for the label.
 func (l *Label) SizeHint() image.Point {
-	var size image.Point
-
-	lines := strings.Split(l.text, "\n")
-
-	for _, line := range lines {
-		if len(line) > size.X {
-			size.X = len(line)
-		}
+	return image.Point{
+		X: l.text.cols(),
+		Y: l.text.rows(),
 	}
-	size.Y = len(lines)
-
-	return size
 }
 
 // SizePolicy returns the default layout behavior.
@@ -64,5 +56,5 @@ func (l *Label) OnEvent(_ termbox.Event) {
 }
 
 func (l *Label) SetText(text string) {
-	l.text = text
+	l.text = Text(text)
 }

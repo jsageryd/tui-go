@@ -3,6 +3,7 @@ package tui
 import (
 	"image"
 
+	runewidth "github.com/mattn/go-runewidth"
 	termbox "github.com/nsf/termbox-go"
 )
 
@@ -95,9 +96,12 @@ func (p *Painter) Repaint(w Widget) {
 }
 
 // DrawText paints a string starting at the given coordinate.
-func (p *Painter) DrawText(x, y int, text string) {
-	for i, r := range text {
-		p.DrawRune(i+x, y, r)
+func (p *Painter) DrawText(x, y int, text Text) {
+	xOffset := 0
+	c := runewidth.NewCondition()
+	for _, r := range text {
+		p.DrawRune(x+xOffset, y, r)
+		xOffset += c.RuneWidth(r)
 	}
 }
 

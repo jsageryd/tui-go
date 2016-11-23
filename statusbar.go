@@ -10,8 +10,8 @@ import (
 type StatusBar struct {
 	size image.Point
 
-	text     string
-	permText string
+	text     Text
+	permText Text
 
 	fg, bg termbox.Attribute
 }
@@ -19,7 +19,7 @@ type StatusBar struct {
 // NewStatusBar returns a new StatusBar.
 func NewStatusBar(text string) *StatusBar {
 	return &StatusBar{
-		text:     text,
+		text:     Text(text),
 		permText: "",
 	}
 }
@@ -63,9 +63,9 @@ func (b *StatusBar) SetBrush(fg, bg termbox.Attribute) {
 }
 
 func (b *StatusBar) SetText(text string) {
-	b.text = text
+	b.text = Text(text)
 }
 
 func (b *StatusBar) SetPermanentText(text string) {
-	b.permText = text
+	b.permText = Text(text)
 }

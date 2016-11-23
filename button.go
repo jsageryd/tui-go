@@ -9,7 +9,7 @@ import (
 
 // Button is a widget to fill out space.
 type Button struct {
-	text string
+	text Text
 
 	focused bool
 	size    image.Point
@@ -20,7 +20,7 @@ type Button struct {
 // NewButton returns a new Button.
 func NewButton(text string) *Button {
 	return &Button{
-		text: text,
+		text: Text(text),
 	}
 }
 
@@ -42,10 +42,10 @@ func (b *Button) Draw(p *Painter) {
 	}
 
 	withBrush(p, fg, bg, func(p *Painter) {
-		lines := strings.Split(b.text, "\n")
+		lines := strings.Split(string(b.text), "\n")
 		for i, line := range lines {
 			p.FillRect(0, i, s.X, 1)
-			p.DrawText(0, i, line)
+			p.DrawText(0, i, Text(line))
 		}
 	})
 }
@@ -57,18 +57,10 @@ func (b *Button) Size() image.Point {
 
 // SizeHint returns the recommended size for the button.
 func (b *Button) SizeHint() image.Point {
-	var size image.Point
-
-	lines := strings.Split(b.text, "\n")
-
-	for _, line := range lines {
-		if len(line) > size.X {
-			size.X = len(line)
-		}
+	return image.Point{
+		X: b.text.cols(),
+		Y: b.text.rows(),
 	}
-	size.Y = len(lines)
-
-	return size
 }
 
 // SizePolicy returns the default layout behavior.

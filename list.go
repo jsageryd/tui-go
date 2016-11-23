@@ -10,7 +10,7 @@ import (
 type List struct {
 	size image.Point
 
-	items    []string
+	items    []Text
 	selected int
 	numRows  int
 	pos      int
@@ -156,7 +156,9 @@ func (l *List) SetSizePolicy(h, v SizePolicy) {
 }
 
 func (l *List) AddItems(items ...string) {
-	l.items = append(l.items, items...)
+	for _, item := range items {
+		l.items = append(l.items, Text(item))
+	}
 }
 
 func (l *List) SetSelected(i int) {
@@ -172,7 +174,7 @@ func (l *List) SetRows(n int) {
 }
 
 func (l *List) SelectedItem() string {
-	return l.items[l.selected]
+	return string(l.items[l.selected])
 }
 
 func (l *List) OnItemActivated(fn func(*List)) {
